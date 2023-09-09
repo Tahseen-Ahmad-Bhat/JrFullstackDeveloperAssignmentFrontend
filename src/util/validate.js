@@ -42,39 +42,42 @@ export const validateForm = (userData) => {
 
   // Validating Name
   if (!validateName(firstName)) {
-    return notify("error", "Please enter your first name!");
+    return { err: "Please enter your first name!" };
   }
 
   if (!validateName(lastName)) {
-    return notify("error", "Please enter your last name!");
+    return { err: "Please enter your last name!" };
   }
   // Validating Email
   if (!validateEmail(email)) {
-    return notify("error", "Please enter a valid email!");
+    return { err: "Please enter a valid email!" };
   }
 
   // Validating phone number
   if (!validatePhone(mobile)) {
-    return notify("error", "Please enter a valid phone number!");
+    return { err: "Please enter a valid phone number!" };
   }
 
   // Validating city name
   if (!validateCity(city)) {
-    return notify("error", "Please enter a valid city name!");
+    return { err: "Please enter a valid city name!" };
   }
 
   // Validating state name
   if (!validateState(state)) {
-    return notify("error", "Please enter your state!");
+    return { err: "Please enter your state!" };
   }
 
   // Validating pin code
   if (!validatePin(pinCode)) {
-    return notify("error", "Please enter a valid pin code!");
+    return { err: "Please enter a valid pin code!" };
   }
 
   // Validating country name
   if (!validateCountry(country)) {
-    return notify("error", "Please enter your country!");
+    return { err: "Please enter your country!" };
   }
+
+  // If everything is ok
+  return { ok: true };
 };

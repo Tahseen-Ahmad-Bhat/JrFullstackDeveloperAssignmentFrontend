@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./Form.css";
 import FormInput from "./FormInput";
 import { validateForm } from "../util/validate";
+import { createUser } from "../api/user";
+import { notify } from "../util/notification";
 
 const initialUserData = {
   firstName: "",
@@ -19,17 +21,30 @@ const Form = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
+
     setUserData({
       ...userData,
       [name]: value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    validateForm(userData);
+    // function for validating user data
+    const { ok, err } = validateForm(userData);
+
+    if (err) return notify("error", err);
+
+    // function to send request to backend for the creation of user
+    const { error, data } = await createUser(userData);
+
+    if (error) return notify("error", error);
+
+    console.log(data);
+    setUserData({ ...initialUserData });
+
+    notify("success", data.message);
   };
 
   const { firstName, lastName, email, mobile, city, state, pinCode, country } =
