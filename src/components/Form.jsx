@@ -4,6 +4,7 @@ import FormInput from "./FormInput";
 import { validateForm } from "../util/validate";
 import { createUser } from "../api/user";
 import { notify } from "../util/notification";
+import { ImSpinner2 } from "react-icons/im";
 
 const initialUserData = {
   firstName: "",
@@ -18,6 +19,7 @@ const initialUserData = {
 
 const Form = () => {
   const [userData, setUserData] = useState(initialUserData);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,20 +33,28 @@ const Form = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setIsDisabled(true);
+
     // function for validating user data
     const { ok, err } = validateForm(userData);
 
-    if (err) return notify("error", err);
+    if (err) {
+      setIsDisabled(false);
+      return notify("error", err);
+    }
 
     // function to send request to backend for the creation of user
-    const { error, data } = await createUser(userData);
+    const { error, message } = await createUser(userData);
 
-    if (error) return notify("error", error);
+    if (error) {
+      setIsDisabled(false);
+      return notify("error", error);
+    }
 
-    console.log(data);
     setUserData({ ...initialUserData });
 
-    notify("success", data.message);
+    notify("success", message);
+    setIsDisabled(false);
   };
 
   const { firstName, lastName, email, mobile, city, state, pinCode, country } =
@@ -112,8 +122,7 @@ const Form = () => {
         />
 
         <button type="submit" className="btn btn-primary">
-          {/* {!isDisabled ? "Submit Form" : <ImSpinner2 className="spinner" />} */}
-          Submit Form
+          {isDisabled ? <ImSpinner2 className="spinner" /> : "Submit Form"}
         </button>
       </form>
     </div>
